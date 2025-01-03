@@ -82,17 +82,19 @@ DATABASES = {
     }
 }
 '''
+import os
+import json
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'team1-1!',
-        'HOST': 'team1-1-postgresql.ch4xfyi6stod.ap-northeast-2.rds.amazonaws.com',
-        'PORT': '5432',
-    }
-}
+# BASE_DIR을 기준으로 secret.json 경로 설정
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# secret.json 파일 로드
+with open(os.path.join(BASE_DIR, 'secret.json')) as secret_file:
+    secrets = json.load(secret_file)
+
+# DATABASES 설정
+DATABASES = secrets['DATABASES']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
