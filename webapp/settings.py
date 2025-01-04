@@ -15,6 +15,13 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'dashboard' / 'static',
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -85,16 +92,12 @@ DATABASES = {
 import os
 import json
 
-# BASE_DIR을 기준으로 secret.json 경로 설정
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # secret.json 파일 로드
-with open(os.path.join(BASE_DIR, 'secret.json')) as secret_file:
+with open(BASE_DIR / 'secret.json') as secret_file:
     secrets = json.load(secret_file)
 
 # DATABASES 설정
 DATABASES = secrets['DATABASES']
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -126,17 +129,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-
-# 추가: STATICFILES_DIRS에 앱별 정적 파일 경로 추가
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'dashboard/static'),
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
