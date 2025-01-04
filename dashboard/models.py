@@ -1,4 +1,45 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
+class UserManager(BaseUserManager):
+    def create_user(self, id, password=None, **extra_fields):
+        if not id:
+            raise ValueError("사용자 ID는 필수 항목입니다.")
+        user = self.model(id=id, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, id, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(id, password, **extra_fields)
+
+class User(AbstractBaseUser):
+    user_id = models.AutoField(primary_key=True)
+    id = models.CharField(max_length=255, unique=True, verbose_name="사용자 ID")
+    first_name = models.CharField(max_length=255, verbose_name="이름")
+    last_name = models.CharField(max_length=255, verbose_name="성")
+    email = models.EmailField(unique=True, verbose_name="이메일")
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'id'
+    REQUIRED_FIELDS = ['email']
+
+    class Meta:
+        db_table = 'user_table'
+
+
+class UserProfile(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, to_field='user_id', verbose_name="사용자 고유번호")  # FK
+    profile_image_url = models.TextField(verbose_name="프로필 이미지 링크")
+
+    class Meta:
+        db_table = 'user_profile_table'
+
 
 # analaytics schema
 class Forecast(models.Model):
@@ -27,24 +68,3 @@ class Sentiment(models.Model):
 
     class Meta:
         db_table = 'sentiment_table'
-
-
-# user schema
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=255, verbose_name="사용자 이름")
-    last_name = models.CharField(max_length=255, verbose_name="사용자 성")
-    id = models.CharField(max_length=255, unique=True, verbose_name="사용자 ID")
-    password = models.CharField(max_length=255, verbose_name="사용자 비밀번호")
-    email = models.EmailField(max_length=255, verbose_name="사용자 이메일")
-
-    class Meta:
-        db_table = 'user_table'
-
-
-class UserProfile(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, to_field='user_id', verbose_name="사용자 고유번호")  # FK
-    profile_image_url = models.TextField(verbose_name="프로필 이미지 링크")
-
-    class Meta:
-        db_table = 'user_profile_table'
