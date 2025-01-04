@@ -95,6 +95,7 @@ with open(os.path.join(BASE_DIR, 'secret.json')) as secret_file:
 # DATABASES 설정
 DATABASES = secrets['DATABASES']
 
+AUTH_USER_MODEL = 'dashboard.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
