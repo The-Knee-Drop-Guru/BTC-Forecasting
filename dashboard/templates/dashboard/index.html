@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'dashboard/styles.css' %}">
-    <script defer src="{% static 'dashboard/script.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js 라이브러리 -->
+    <script defer src="{% static 'dashboard/js/script.js' %}"></script>
 </head>
 <body>
+    <!-- Navbar 포함 -->
+    {% include 'navbar.html' %}
+    
     <header>
         <h1>Dashboard</h1>
     </header>
 
     <main>
         <section id="forecasting">
-
+            <h2>Bitcoin Price Forecast</h2>
+            <canvas id="bitcoinChart" width="800" height="400"></canvas> <!-- 그래프 캔버스 -->
         </section>
 
         <section id="sentiment">

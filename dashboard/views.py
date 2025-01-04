@@ -2,7 +2,9 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.http import JsonResponse
 from .models import Forecast, Feature, User, UserProfile, Sentiment
+from .forms import SignUpForm
 
 # 대시보드 화면을 위한 뷰
 def dashboard(request):
@@ -51,3 +53,28 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'dashboard/login.html', {'form': form})
+
+# 회원가입화면을 위한 뷰
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()  # 사용자 저장
+            messages.success(request, "회원가입이 완료되었습니다. 로그인해주세요.")
+            return redirect('dashboard:login')  # 회원가입 후 로그인 페이지로 리다이렉트
+        else:
+            messages.error(request, "회원가입에 실패했습니다. 양식을 확인해주세요.")
+    else:
+        form = SignUpForm()
+    return render(request, 'dashboard/signup.html', {'form': form})
+
+
+# 비트코인 가격 변동 그래프를 위한 뷰
+def forecast(request):
+    data = Forecast.objects.all()
+    response = {
+        "time": [entry.date_time.strftime('%Y-%m-%d %H:%M') for entry in data],
+        "real_price": [entry.real_price for entry in data],
+        "predicted_price": [entry.predicted_price if entry.predicted_price else None for entry in data],
+    }
+    return JsonResponse(response)

@@ -15,6 +15,14 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_URL = '/static/'
+
+# 추가: STATICFILES_DIRS에 앱별 정적 파일 경로 추가
+STATICFILES_DIRS = [
+    BASE_DIR / 'dashboard' / 'static',
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -38,7 +46,29 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # Google 소셜 로그인을 위한 프로바이더
 ]
+
+# 구글 소셜 로그인을 위한 세팅
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'webapp.urls'
@@ -55,7 +86,7 @@ ROOT_URLCONF = 'webapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # templates 디렉토리 경로
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,11 +116,8 @@ DATABASES = {
 import os
 import json
 
-# BASE_DIR을 기준으로 secret.json 경로 설정
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # secret.json 파일 로드
-with open(os.path.join(BASE_DIR, 'secret.json')) as secret_file:
+with open(BASE_DIR / 'secret.json') as secret_file:
     secrets = json.load(secret_file)
 
 # DATABASES 설정
@@ -126,18 +154,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
-
-# 추가: STATICFILES_DIRS에 앱별 정적 파일 경로 추가
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'dashboard/static'),
-]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
