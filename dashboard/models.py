@@ -58,6 +58,7 @@ class Feature(models.Model):
     id = models.AutoField(primary_key=True, verbose_name="고유 ID")
     name = models.CharField(max_length=255, verbose_name="피처 이름")
     importance = models.FloatField(verbose_name="피처 중요도")
+    date_time = models.DateField(verbose_name="날짜")
 
     class Meta:
         db_table = 'feature_table'  # analytics 스키마 지정
