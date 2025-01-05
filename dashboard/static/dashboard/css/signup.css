@@ -1,0 +1,174 @@
+/* Form 컨테이너 */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+    margin: 0; /* 브라우저 기본 여백 제거 */
+    padding: 20px; /* 컨테이너 내부 여백 추가 */
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+/* Form 스타일 */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 폼 요소 간의 간격 */
+    max-width: 400px; /* 폼 최대 너비 */
+    width: 100%; /* 부모 컨테이너에 맞춤 */
+    background-color: #fff;
+    padding: 30px; /* 폼 내부 여백 */
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* 제목 스타일 */
+.title {
+    font-size: 28px;
+    color: royalblue;
+    font-weight: 600;
+    letter-spacing: -1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    margin-bottom: 10px; /* 제목 아래 간격 추가 */
+}
+
+.title::before,
+.title::after {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    left: 0px;
+    background-color: royalblue;
+}
+
+.title::before {
+    width: 18px;
+    height: 18px;
+    background-color: royalblue;
+}
+
+.title::after {
+    width: 18px;
+    height: 18px;
+    animation: pulse 1s linear infinite;
+}
+
+/* 메세지 스타일 */
+.message {
+    color: rgba(88, 87, 87, 0.822);
+    font-size: 14px;
+    line-height: 1.5; /* 텍스트 간격 개선 */
+    text-align: left; /* 왼쪽 정렬 */
+    margin: 0; /* 위쪽 패딩 제거 */
+}
+
+/* 로그인 유도 문구 */
+.signin {
+    color: rgba(88, 87, 87, 0.822);
+    font-size: 14px;
+    line-height: 1.5; /* 텍스트 간격 개선 */
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 20px; /* 상단 여백 추가 */
+}
+
+.signin a {
+    color: royalblue;
+}
+
+.signin a:hover {
+    text-decoration: underline royalblue;
+}
+
+/* 입력 필드 컨테이너 */
+.flex {
+    display: flex;
+    width: 100%;
+    gap: 10px; /* 입력 필드 간격 */
+}
+
+.flex > label {
+    flex: 1; /* 입력 필드 균등 분할 */
+}
+
+/* 입력 필드 스타일 */
+.form label {
+    position: relative;
+    display: flex;
+    flex-direction: column; /* 텍스트와 입력 필드 세로 정렬 */
+}
+
+.form label .input {
+    width: 100%;
+    padding: 10px 12px; /* 내부 여백 조정 */
+    outline: 0;
+    border: 1px solid rgba(105, 105, 105, 0.397);
+    border-radius: 10px;
+    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+.form label .input + span {
+    position: absolute;
+    left: 12px;
+    top: 15px;
+    color: grey;
+    font-size: 0.9em;
+    cursor: text;
+    transition: 0.3s ease;
+}
+
+.form label .input:placeholder-shown + span {
+    top: 15px;
+    font-size: 0.9em;
+}
+
+.form label .input:focus + span,
+.form label .input:valid + span {
+    top: -5px; /* 텍스트를 위로 이동 */
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
+.form label .input:valid + span {
+    color: green;
+}
+
+/* 제출 버튼 스타일 */
+.submit {
+    border: none;
+    outline: none;
+    background-color: royalblue;
+    padding: 12px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%; /* 버튼 전체 너비 */
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit:hover {
+    background-color: rgb(56, 90, 194);
+}
+
+/* 애니메이션 효과 */
+@keyframes pulse {
+    from {
+        transform: scale(0.9);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
