@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from .models import Forecast, Feature, User, UserProfile, Sentiment
 from .forms import SignUpForm
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 # 대시보드 화면을 위한 뷰
 def dashboard(request):
@@ -56,8 +58,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'dashboard/login.html', {'form': form})
 
-from django.contrib.auth import login
-
+# 회원가입을 위한 
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -91,13 +92,37 @@ def signup(request):
     return render(request, 'dashboard/signup.html', {'form': form})
 
 
-
-# 비트코인 가격 변동 그래프를 위한 뷰
-def forecast(request):
-    data = Forecast.objects.all()
+# 비트코인 가격 변동 데이터를 반환하는 API
+@api_view(['GET'])
+def btc_forecasting_api(request):
+    """
+    최근 360개의 비트코인 실제 가격과 예측 가격 데이터를 반환함
+    데이터는 시간(time), 실제 가격(real_price), 예측 가격(predicted_price)으로 구성된 JSON 형식으로 반환됨
+    """
+    data = Forecast.objects.order_by('-date_time')[:540]
     response = {
         "time": [entry.date_time.strftime('%Y-%m-%d %H:%M') for entry in data],
         "real_price": [entry.real_price for entry in data],
-        "predicted_price": [entry.predicted_price if entry.predicted_price else None for entry in data],
+        "predicted_price": [entry.predicted_price for entry in data],
     }
-    return JsonResponse(response)
+    return Response(response)
+
+# 모델의 피처 중요도 데이터를 반환하는 API
+@api_view(['GET'])
+def feature_importance_api(request):
+    """
+    가장 최근 날짜의 피처 중요도 데이터를 반환함
+    데이터는 각 피처 이름(name)과 중요도(importance)로 구성된 JSON 형식으로 반환됨
+    """
+    # 가장 최근 날짜의 피처 중요도 가져오기
+    latest_date = Feature.objects.latest('date_time').date_time
+    features = Feature.objects.filter(date_time=latest_date)
+    
+    # JSON 데이터로 변환
+    response_data = {
+        "features": [
+            {"name": feature.name, "importance": feature.importance}
+            for feature in features
+        ]
+    }
+    return Response(response_data)

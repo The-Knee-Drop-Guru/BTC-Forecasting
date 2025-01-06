@@ -14,5 +14,6 @@ urlpatterns = [
     ), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='dashboard:index'), name='logout'),
     path('signup/', views.signup, name='signup'),
-    path('forecast/', views.forecast, name='forecast'),
+    path('api/btc-forecasting/', views.btc_forecasting_api, name='btc_forecasting_api'),  # 비트코인 예측 데이터
+    path('api/feature-importance/', views.feature_importance_api, name='feature_importance_api'),  # 피처 중요도 데이터
 ]
