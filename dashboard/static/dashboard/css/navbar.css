@@ -1,15 +1,32 @@
+@font-face {
+    font-family: 'Pretendard-Bold';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Reguler';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Reguler.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
 /* 네비게이션 바 스타일 */
 nav {
     display: flex;
     justify-content: space-between; /* 로고와 메뉴를 양쪽 끝으로 배치 */
     align-items: center;
-    background-color: #ededed;
+    background-color: #fff;
     padding: 10px 20px;
     color: #292929;
+    border-bottom: 1px solid #D3D3D3; /* 회색 하단 선 추가 */
 }
+
 
 /* 로고 */
 .navbar-logo a {
+    font-family: 'Pretendard-Bold';
     font-size: 24px;
     font-weight: bold;
     color: #292929;

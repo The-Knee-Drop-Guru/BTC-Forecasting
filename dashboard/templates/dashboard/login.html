@@ -6,21 +6,30 @@
     <title>무릎팍도사 로그인</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'dashboard/css/login.css' %}">
+    <script src="{% static 'dashboard/js/login.js' %}"></script>
 </head>
 <body>
     <div class="form-container">
         <form class="form" method="post" action="{% url 'dashboard:login' %}">
             {% csrf_token %}
             <p class="title">Login</p>
-            <p class="message">아이디와 비밀번호를 입력해 주세요.</p>
-
+            
+            <!-- 메시지 팝업 -->
+            {% if messages %}
+                <div id="popup-messages" class="popup-messages">
+                    {% for message in messages %}
+                        <div class="popup-message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="message">아이디와 비밀번호를 입력해주세요.</p>
             <label>
-                <input id="username" name="username" class="input" type="text" placeholder="" required>
+                <input id="username" name="username" class="input" type="text" required>
                 <span>아이디 Username</span>
             </label>
 
             <label>
-                <input id="password" name="password" class="input" type="password" placeholder="" required>
+                <input id="password" name="password" class="input" type="password" required>
                 <span>비밀번호 Password</span>
             </label>
 

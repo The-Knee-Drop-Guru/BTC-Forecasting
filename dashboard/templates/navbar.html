@@ -10,12 +10,12 @@
 <body>
     <nav>
         <div class="navbar-logo">
-            <a>무릎팍도사</a>
+            <a><span style="color: #DAA520;">₿</span> TheKneeDropGuru</a>
         </div>
         <ul class="navbar-menu">
             {% if user.is_authenticated %}
                 <li>
-                    <span class="navbar-welcome">어서오세요! {{ user.last_name }} {{ user.first_name }}님</span>
+                    <span class="navbar-welcome">어서오세요! {{ user.last_name }}{{ user.first_name }}님</span>
                 </li>
                 <li>
                     <form method="post" action="{% url 'dashboard:logout' %}" style="display: inline;">
