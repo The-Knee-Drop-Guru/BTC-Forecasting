@@ -43,29 +43,50 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, f"환영합니다, {user.first_name}님!")
-                return redirect('dashboard:index')
+                messages.success(request, f"환영합니다, {username}님!")
+                return redirect('/')
             else:
-                messages.error(request, "로그인 정보가 올바르지 않습니다.")
+                messages.error(request, "로그인에 실패했습니다. 사용자 이름 또는 비밀번호를 확인하세요.")
         else:
-            messages.error(request, "로그인 양식을 올바르게 입력해주세요.")
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = AuthenticationForm()
     return render(request, 'dashboard/login.html', {'form': form})
 
-# 회원가입화면을 위한 뷰
-def signup_view(request):
+# 회원가입을 위한 
+def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()  # 사용자 저장
-            messages.success(request, "회원가입이 완료되었습니다. 로그인해주세요.")
-            return redirect('dashboard:login')  # 회원가입 후 로그인 페이지로 리다이렉트
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+
+            # 중복 확인
+            if User.objects.filter(username=username).exists():
+                messages.error(request, "이미 사용 중인 아이디입니다.")
+                return render(request, 'dashboard/signup.html', {'form': form})
+
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "이미 등록된 이메일입니다.")
+                return render(request, 'dashboard/signup.html', {'form': form})
+
+            user = form.save()
+
+            # 로그인 시 backend 지정
+            backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user, backend=backend)
+
+            messages.success(request, f"환영합니다, {user.username}님!")
+            return redirect('dashboard:index')
         else:
-            messages.error(request, "회원가입에 실패했습니다. 양식을 확인해주세요.")
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = SignUpForm()
     return render(request, 'dashboard/signup.html', {'form': form})
