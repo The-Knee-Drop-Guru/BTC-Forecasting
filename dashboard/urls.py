@@ -3,7 +3,6 @@ from django.contrib.auth import views as auth_views
 from . import views
 from .forms import CustomLoginForm
 
-
 app_name = 'dashboard'
 
 urlpatterns = [
@@ -16,4 +15,5 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('api/btc-forecasting/', views.btc_forecasting_api, name='btc_forecasting_api'),  # 비트코인 예측 데이터
     path('api/feature-importance/', views.feature_importance_api, name='feature_importance_api'),  # 피처 중요도 데이터
+    path('api/sentiment/<str:class_id>/', views.sentiment_data_api, name='sentiment_data_api'),  # 감정 분석 데이터
 ]

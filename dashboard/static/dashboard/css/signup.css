@@ -1,3 +1,7 @@
+body {
+    margin: 0px;
+}
+
 /* Form 컨테이너 */
 .form-container {
     display: flex;
@@ -137,7 +141,7 @@
 }
 
 .form label .input:valid + span {
-    color: green;
+    color: royalblue;
 }
 
 /* 제출 버튼 스타일 */
