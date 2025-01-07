@@ -15,14 +15,19 @@
 /* 네비게이션 바 스타일 */
 nav {
     display: flex;
-    justify-content: space-between; /* 로고와 메뉴를 양쪽 끝으로 배치 */
+    justify-content: space-between; /* 양쪽 정렬 */
     align-items: center;
     background-color: #fff;
-    padding: 10px 20px;
+    padding: 15px 20px;
     color: #292929;
-    border-bottom: 1px solid #D3D3D3; /* 회색 하단 선 추가 */
+    border-bottom: 1px solid #D3D3D3;
 }
 
+/* 왼쪽 영역 */
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
 
 /* 로고 */
 .navbar-logo a {
@@ -31,6 +36,7 @@ nav {
     font-weight: bold;
     color: #292929;
     text-decoration: none;
+    margin-right: 20px; /* 로고와 메뉴 사이 간격 */
 }
 
 /* 메뉴 */
@@ -46,26 +52,53 @@ nav {
 }
 
 .navbar-menu li a {
-    color: white;
+    color: #292929;
     text-decoration: none;
     font-size: 18px;
 }
 
 .navbar-menu li a:hover {
-    text-decoration: underline;
+    color: royalblue;
+}
+
+/* 오른쪽 영역 */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* 요소 간 간격 */
 }
 
 /* 환영 메시지 스타일 */
 .navbar-welcome {
-    color: #292929; /* 글씨 색상 */
-    font-size: 18px; /* 글씨 크기 */
-    font-weight: bold; /* 굵은 글씨 */
-    margin-right: 20px; /* 오른쪽 여백 */
-    display: flex; /* 플렉스 박스 설정 */
-    align-items: center; /* 세로 가운데 정렬 */
-    height: 100%; /* 부모 컨테이너 높이에 맞춤 */
+    display: flex; /* Flexbox를 사용하여 내부 요소 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    color: #292929;
+    font-size: 18px;
+    font-weight: bold;
+    height: 100%; /* 부모 높이에 맞춤 */
 }
 
+/* 버튼 스타일 */
+.navbar-button {
+    background-color: royalblue;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 8px 16px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-button:hover {
+    background-color: #292929;
+}
 
 /* 애니메이션 버튼 스타일 */
 .animated-button {
@@ -76,7 +109,7 @@ nav {
     width: 95.02px;
     height: 42.66px;
     border: none;
-    background-color: #3653f8;
+    background-color: royalblue;
     display: flex;
     justify-content: center;
     align-items: center;

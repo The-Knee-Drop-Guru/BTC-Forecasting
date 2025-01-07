@@ -24,6 +24,10 @@ STATICFILES_DIRS = [
     BASE_DIR / 'dashboard' / 'static',
 ]
 
+LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 리다이렉트할 URL (예: 홈페이지)
+LOGIN_URL = '/login/'  # 로그인 페이지 URL
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
