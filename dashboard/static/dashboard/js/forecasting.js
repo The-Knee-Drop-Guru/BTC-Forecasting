@@ -1,122 +1,141 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const startDateInput = document.getElementById('startDate');
-    const endDateInput = document.getElementById('endDate');
+    // 날짜 입력 필드 요소 가져오기
+    const startDateInput = document.getElementById('startDate'); // 시작 날짜 입력 필드
+    const endDateInput = document.getElementById('endDate');     // 종료 날짜 입력 필드
 
+    // 날짜 입력 필드가 없을 경우 오류 출력 후 중단
+    if (!startDateInput || !endDateInput) {
+        console.error("Date input elements are missing in the HTML.");
+        return;
+    }
+
+    // 차트 컨텍스트 가져오기
     const btcCtx = document.getElementById('bitcoinChart').getContext('2d');
+
+    // Chart.js 차트 생성
     const bitcoinChart = new Chart(btcCtx, {
-        type: 'line',
+        type: 'line', // 라인 차트
         data: {
-            labels: [],
+            labels: [], // x축 레이블 (시간 데이터)
             datasets: [
                 {
-                    label: 'Real Price',
-                    data: [],
-                    borderColor: '#0971ff',
-                    borderWidth: 1,
-                    pointRadius: 1,
-                    pointHoverRadius: 6,
-                    fill: false,
+                    label: 'Real Price',    // 실제 비트코인 가격
+                    data: [],               // 데이터 값
+                    borderColor: '#0971ff', // 선 색상
+                    borderWidth: 1,         // 선 두께
+                    pointRadius: 1,         // 데이터 점 크기
+                    pointHoverRadius: 5,    // 데이터 점 hover 크기
+                    fill: false,            // 차트 아래 채우기 비활성화
                 },
                 {
-                    label: 'Predicted Price',
-                    data: [],
-                    borderColor: '#f03738',
-                    borderDash: [5, 5],
-                    borderWidth: 2,
-                    pointRadius: 2,
-                    pointHoverRadius: 6,
-                    fill: false,
+                    label: 'Predicted Price', // 예측된 비트코인 가격
+                    data: [],                 // 데이터 값
+                    borderColor: '#f79a57',   // 선 색상
+                    borderWidth: 2,           // 선 두께
+                    pointRadius: 1,           // 데이터 점 크기
+                    pointHoverRadius: 5,      // 데이터 점 hover 크기
+                    fill: false,              // 차트 아래 채우기 비활성화
+                    spanGaps: true,           // 결측값 무시하고 선 연결
                 },
             ],
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: true,             // 반응형 차트
+            maintainAspectRatio: false,   // 고정 비율 비활성화
             plugins: {
-                tooltip: {
-                    enabled: true,
-                    mode: 'nearest',
-                    intersect: false,
+                tooltip: {                // 툴팁 설정
+                    enabled: true,        // 툴팁 활성화
+                    mode: 'nearest',      // 툴팁이 가장 가까운 데이터에 반응
+                    intersect: false,     // 교차점 없이 데이터에만 반응
                     callbacks: {
                         title: (tooltipItems) => {
                             const date = new Date(tooltipItems[0].parsed.x);
-                            return `Date: ${date.toLocaleString()}`;
+                            return `Date: ${date.toLocaleString()}`; // 툴팁 제목: 날짜
                         },
                         label: (tooltipItem) => {
-                            const datasetLabel = tooltipItem.dataset.label || '';
-                            const value = tooltipItem.raw || 0;
-                            return `${datasetLabel}: $${value.toLocaleString()}`;
+                            const datasetLabel = tooltipItem.dataset.label || ''; // 데이터셋 레이블
+                            const value = tooltipItem.raw || 0;                   // 데이터 값
+                            return `${datasetLabel}: $${value.toLocaleString()}`; // 툴팁 내용
                         },
                     },
                 },
             },
             scales: {
                 x: {
-                    type: 'time',
+                    type: 'time',                  // x축을 시간으로 설정
                     time: {
-                        unit: 'hour',
+                        unit: 'hour',             // 시간 단위
                         displayFormats: {
-                            hour: 'MMM D HH:mm',
+                            hour: 'MMM D HH:mm',  // x축 레이블 표시 형식
                         },
                     },
                     title: {
-                        display: true,
-                        text: 'Date & Time',
+                        display: true,            // x축 제목 표시
+                        text: 'Date & Time',      // x축 제목
                     },
                     ticks: {
-                        autoSkip: true,
-                        maxTicksLimit: 9,
+                        autoSkip: true,           // 레이블 자동 생략
+                        maxTicksLimit: 9,         // 최대 레이블 수 제한
                         callback: function (value) {
                             const date = new Date(value);
-                            return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:00`;
+                            return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:00`; // 레이블 포맷
                         },
                     },
                 },
                 y: {
-                    title: { display: true, text: 'BTC Price' },
+                    title: {
+                        display: true,            // y축 제목 표시
+                        text: 'BTC Price',        // y축 제목
+                    },
                     ticks: {
-                        callback: (value) => value.toLocaleString() + '$',
+                        callback: (value) => value.toLocaleString() + '$', // y축 값에 $ 추가
                     },
                 },
             },
         },
     });
 
+    // 비트코인 예측 데이터를 가져와 차트 업데이트
     function fetchBitcoinForecast(startDate, endDate) {
-        if (!startDate || !endDate) return;
+        if (!startDate || !endDate) return; // 시작 또는 종료 날짜가 없으면 중단
 
         fetch(`/api/btc-forecasting/?start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
-                console.log('API 데이터:', data); // 데이터 확인
-                bitcoinChart.data.labels = data.time;
-                bitcoinChart.data.datasets[0].data = data.real_price;
-                bitcoinChart.data.datasets[1].data = data.predicted_price.map(price => price || NaN);
-                bitcoinChart.update();
+                // API로부터 받은 데이터로 차트 업데이트
+                bitcoinChart.data.labels = data.time; // x축 레이블 설정
+                bitcoinChart.data.datasets[0].data = data.real_price; // 실제 가격 데이터
+                bitcoinChart.data.datasets[1].data = data.predicted_price.map(price => {
+                    return price || null; // 결측값(null) 유지
+                });
+                bitcoinChart.update(); // 차트 업데이트
             })
             .catch(error => console.error('Error fetching Bitcoin forecast data:', error));
     }
 
+    // 기본 날짜 범위를 설정하고 데이터 가져오기
     function initializeDefaultDateRange() {
-        const today = new Date();
-        const endDate = today.toISOString().split('T')[0];
-        const startDate = new Date(today);
+        const today = new Date(); // 현재 날짜
+        const endDate = today.toISOString().split('T')[0]; // 종료 날짜를 오늘로 설정
+        const startDate = new Date(today); // 시작 날짜를 (오늘 - 6일)로 설정
         startDate.setDate(startDate.getDate() - 6);
-        const startDateFormatted = startDate.toISOString().split('T')[0];
+        const startDateFormatted = startDate.toISOString().split('T')[0]; // 시작 날짜 포맷
 
-        startDateInput.value = startDateFormatted;
-        endDateInput.value = endDate;
+        startDateInput.value = startDateFormatted; // 시작 날짜 입력 필드 설정
+        endDateInput.value = endDate;              // 종료 날짜 입력 필드 설정
 
-        fetchBitcoinForecast(startDateFormatted, endDate);
+        fetchBitcoinForecast(startDateFormatted, endDate); // 기본 날짜 범위로 데이터 가져오기
     }
 
+    // 시작 날짜 변경 시 차트 업데이트
     startDateInput.addEventListener("change", () => {
         fetchBitcoinForecast(startDateInput.value, endDateInput.value);
     });
 
+    // 종료 날짜 변경 시 차트 업데이트
     endDateInput.addEventListener("change", () => {
         fetchBitcoinForecast(startDateInput.value, endDateInput.value);
     });
 
-    initializeDefaultDateRange();
+    initializeDefaultDateRange(); 
 });
