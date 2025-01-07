@@ -9,7 +9,7 @@ from .forms import SignUpForm
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 
 # 대시보드 화면을 위한 뷰
@@ -19,11 +19,38 @@ def dashboard(request):
     # 사용자 프로필 이미지 URL 가져오기
     user_profiles = UserProfile.objects.all()
     
+    # 오늘과 어제 날짜
+    today = datetime.now().date()
+    yesterday = today - timedelta(days=1)
+
+    # 전일 23:59 실제 가격
+    yesterday_data = Forecast.objects.filter(date_time__date=yesterday, date_time__time=time(23, 59)).first()
+    # 금일 23:59 예측 가격
+    today_data = Forecast.objects.filter(date_time__date=today, date_time__time=time(23, 59)).first()
+
+    if yesterday_data and today_data:
+        yesterday_price = yesterday_data.real_price
+        today_price = today_data.predicted_price
+
+        # 상승/하락 퍼센트 계산
+        percentage_change = ((today_price - yesterday_price) / yesterday_price) * 100
+
+        if percentage_change > 0:
+            forecast_message = f"금일 비트코인은 전일 가격 대비 약 {percentage_change:.2f}% 상승할 것으로 예상됩니다."
+        elif percentage_change < 0:
+            forecast_message = f"금일 비트코인은 전일 가격 대비 약 {abs(percentage_change):.2f}% 하락할 것으로 예상됩니다."
+        else:
+            forecast_message = "금일 비트코인은 전일 가격 대비 변동이 없을 것으로 예상됩니다."
+    else:
+        # 필요한 데이터가 없을 때 처리
+        forecast_message = "예측에 필요한 데이터를 찾을 수 없습니다."
+
     # 템플릿에 데이터를 전달
     context = {
         'users': users,
         'user_profiles': user_profiles,
         'date': datetime.now().strftime('%Y-%m-%d'),  # 현재 날짜 추가
+        'forecast_message': forecast_message,
     }
     return render(request, 'dashboard/index.html', context)
 
@@ -136,6 +163,27 @@ def feature_importance_api(request):
             for feature in features
         ]
     }
+    return Response(response_data)
+
+
+# 에러 데이터를 반환하는 API
+@api_view(['GET'])
+def error_data_api(request):
+    """
+    매일 23:59의 실제 값과 예측 값의 오차 데이터를 반환하는 API
+    """
+    # 23:59 데이터를 필터링
+    forecasts = Forecast.objects.filter(date_time__time=time(23, 59)).order_by('date_time')
+
+    # 오차 데이터 계산 및 JSON 변환
+    response_data = [
+        {
+            "date": forecast.date_time.strftime('%Y-%m-%d'),
+            "error": forecast.predicted_price - forecast.real_price
+        }
+        for forecast in forecasts if forecast.predicted_price is not None
+    ]
+
     return Response(response_data)
 
 

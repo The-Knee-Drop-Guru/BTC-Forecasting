@@ -10,8 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="{% static 'dashboard/js/forecasting.js' %}"></script>
+    <script src="{% static 'dashboard/js/error.js' %}"></script>
     <script src="{% static 'dashboard/js/feature.js' %}"></script>
     <script src="{% static 'dashboard/js/sentiment.js' %}"></script>
+    <script src="{% static 'dashboard/js/simulation.js' %}"></script>
     <script src="{% static 'dashboard/js/blur.js' %}"></script>
 </head>
 <body>
@@ -37,7 +39,7 @@
                             <input type="date" id="endDate" class="date-input">
                         </div>
                         <canvas id="bitcoinChart"></canvas>
-                        <p class="forecast-text">오늘 비트코인의 전망은 긍정적입니다.</p>
+                        <p class="forecast-message">{{ forecast_message|default:"금일 비트코인 예측 가격이 업데이트 되지 않았습니다." }}</p>
                     {% else %}
                         <h2>비트코인 가격 예측 그래프</h2>
                         <div class="filter-container">
@@ -111,10 +113,9 @@
                 </section>              
             </aside>
         </div>
+        <footer>
+            <p>&copy; 2025 The Knee Drop the Guru.</p>
+        </footer>
     </main>
-
-    <footer>
-        <p>&copy; 2025 The Knee Drop the Guru.</p>
-    </footer>
 </body>
 </html>
