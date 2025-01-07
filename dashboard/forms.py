@@ -33,3 +33,4 @@ class SignUpForm(UserCreationForm):
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("이 사용자 이름은 이미 사용 중입니다.")
         return username
+

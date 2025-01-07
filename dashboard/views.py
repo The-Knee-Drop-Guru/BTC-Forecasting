@@ -8,34 +8,23 @@ from .models import Forecast, Feature, User, UserProfile, Sentiment
 from .forms import SignUpForm
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.contrib.auth.decorators import login_required
+from datetime import datetime, timedelta
 
 
 # 대시보드 화면을 위한 뷰
 def dashboard(request):
-    # 예측 결과 가져오기 
-    forecasts = Forecast.objects.all()
-    
-    # 피처 중요도 가져오기
-    features = Feature.objects.all()
-    
-    # 감정 분석 데이터 가져오기
-    sentiments = Sentiment.objects.all()
-    
     # 사용자 정보 가져오기
     users = User.objects.all()
-    
     # 사용자 프로필 이미지 URL 가져오기
     user_profiles = UserProfile.objects.all()
     
     # 템플릿에 데이터를 전달
     context = {
-        'forecasts': forecasts,
-        'features': features,
         'users': users,
         'user_profiles': user_profiles,
-        'sentiments': sentiments,
+        'date': datetime.now().strftime('%Y-%m-%d'),  # 현재 날짜 추가
     }
-
     return render(request, 'dashboard/index.html', context)
 
 # 로그인화면을 위한 뷰
@@ -104,19 +93,22 @@ def signup(request):
 @api_view(['GET'])
 def btc_forecasting_api(request):
     """
-    최근 7일(1440 * 7개)의 비트코인 실제 가격과 예측 가격 데이터를 반환함.
-    날짜 필터링(start_date, end_date)도 지원함.
+    선택된 날짜 범위에 따라 비트코인 실제 가격과 예측 가격 데이터를 반환
     """
     start_date = request.query_params.get('start_date')
     end_date = request.query_params.get('end_date')
 
     if start_date and end_date:
+        # 종료 날짜를 23:59:59로 설정
+        end_date_with_time = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
+        end_date_with_time = end_date_with_time - timedelta(seconds=1)
+
         data = Forecast.objects.filter(
-            date_time__range=[start_date, end_date]
-        ).order_by('-date_time')
+            date_time__range=[start_date, end_date_with_time]
+        ).order_by('date_time')
     else:
-        # 최근 7일치 데이터 가져오기
-        data = Forecast.objects.order_by('-date_time')[:1440 * 7]
+        # 기본 데이터 (전체 데이터)
+        data = Forecast.objects.none()
 
     response = {
         "time": [entry.date_time.strftime('%Y-%m-%d %H:%M') for entry in data],
@@ -151,6 +143,7 @@ def sentiment_data_api(request, class_id):
     """
     특정 class_id에 대한 감정 분석 데이터를 JSON 형식으로 반환합니다.
     """
+    # 감정 분석 데이터 가져오기
     sentiments = Sentiment.objects.filter(class_id=class_id)
     sentiment_counts = sentiments.values('sentiment_value').annotate(count=Count('id'))
 
@@ -161,3 +154,5 @@ def sentiment_data_api(request, class_id):
     }
     return JsonResponse(data)
 
+def simulation(request):
+    return render(request, 'dashboard/simulation.html')

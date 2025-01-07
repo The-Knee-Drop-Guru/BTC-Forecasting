@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="{% static 'dashboard/css/index.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script src="{% static 'dashboard/js/forecasting.js' %}"></script>
+    <script src="{% static 'dashboard/js/feature.js' %}"></script>
     <script src="{% static 'dashboard/js/sentiment.js' %}"></script>
+    <script src="{% static 'dashboard/js/blur.js' %}"></script>
 </head>
 <body>
     <!-- Navbar 포함 -->
@@ -25,29 +28,47 @@
             <div class="container">
                 <!-- 코인 가격 예측, 전망 파트 -->
                 <section id="forecasting" class="price-forecast">
-                    <h2>코인 가격 예측 그래프</h2>
-                    <!-- 날짜 필터링 UI -->
-                    <div class="filter-container">
-                        <label for="startDate" class="filter-label">기간 선택 (고치는 중)</label>
-                        <input type="date" id="startDate" class="date-input">
-                        <button id="filterButton" class="filter-button">적용하기</button>
-                    </div>
-                    <canvas id="bitcoinChart" width="800" height="300"></canvas>
-                    <div class="forecast-summary">
-                        <p>금일 비트코인 전망은 긍정적예요! (업데이트 시간)</p>
-                    </div>
-                </section>
+                    {% if user.is_authenticated %}
+                        <h2>비트코인 가격 예측 그래프</h2>
+                        <div class="filter-container">
+                            <label for="startDate" class="filter-label">시작일</label>
+                            <input type="date" id="startDate" class="date-input">
+                            <label for="endDate" class="filter-label">종료일</label>
+                            <input type="date" id="endDate" class="date-input">
+                        </div>
+                        <canvas id="bitcoinChart"></canvas>
+                        <p class="forecast-text">오늘 비트코인의 전망은 긍정적입니다.</p>
+                    {% else %}
+                        <h2>비트코인 가격 예측 그래프</h2>
+                        <div class="filter-container">
+                            <label for="startDate" class="filter-label">시작일</label>
+                            <input type="date" id="startDate" class="date-input" disabled>
+                            <label for="endDate" class="filter-label">종료일</label>
+                            <input type="date" id="endDate" class="date-input" disabled>
+                        </div>
+                        <div class="blur-container">
+                            <div class="blur-content">
+                                <canvas id="bitcoinChart"></canvas>
+                            </div>
+                            <div class="blur-overlay">
+                                <p>로그인 후 이용 가능합니다.</p>
+                            </div>
+                        </div>                        
+                    {% endif %}
+                </section>                              
 
                 <!-- 최신 동향 - 뉴스 Sentiment -->
                 <section id="newsSentiment" class="news-sentiment">
-                    <h2>뉴스 Sentiment</h2>
+                    <h2>뉴스 최신 동향</h2>
                     <canvas id="newsChart"></canvas>
+                    <p id="date">기준: {{ date }}</p>
                 </section>
 
                 <!-- 최신 동향 - Reddit Sentiment -->
                 <section id="redditSentiment" class="reddit-sentiment">
-                    <h2>Reddit Sentiment</h2>
+                    <h2>커뮤니티 최신 동향</h2>
                     <canvas id="redditChart"></canvas>
+                    <p id="date">기준: {{ date }}</p>
                 </section>
             </div>
 
@@ -55,15 +76,39 @@
             <aside class="right-aside">
                 <!-- 에러 그래프 -->
                 <section id="error" class="box error">
-                    <h2>에러 그래프</h2>
-                    <canvas id="errorChart"></canvas>
+                    {% if user.is_authenticated %}
+                        <h2>에러 그래프</h2>
+                        <canvas id="errorChart"></canvas>
+                    {% else %}
+                        <h2>에러 그래프</h2>
+                        <div class="blur-container">
+                            <div class="blur-content">
+                                <canvas id="errorChart"></canvas>
+                            </div>
+                            <div class="blur-overlay">
+                                <p>로그인 후 이용 가능합니다.</p>
+                            </div>
+                        </div>
+                    {% endif %}
                 </section>
 
                 <!-- 모델 피처 중요도 순위 -->
                 <section id="feature" class="box feature">
-                    <h2>모델 피처 중요도 순위</h2>
-                    <ul id="featureRanking"></ul>
-                </section>
+                    {% if user.is_authenticated %}
+                        <h2>모델 피처 중요도</h2>
+                        <ul id="featureRanking"></ul>
+                    {% else %}
+                        <h2>모델 피처 중요도</h2>
+                        <div class="blur-container">
+                            <div class="blur-content">
+                                <ul id="featureRanking"></ul>
+                            </div>
+                            <div class="blur-overlay">
+                                <p>로그인 후 이용 가능합니다.</p>
+                            </div>
+                        </div>                        
+                    {% endif %}
+                </section>              
             </aside>
         </div>
     </main>
