@@ -70,9 +70,13 @@ nav {
 
 /* 환영 메시지 스타일 */
 .navbar-welcome {
+    display: flex; /* Flexbox를 사용하여 내부 요소 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
     color: #292929;
     font-size: 18px;
     font-weight: bold;
+    height: 100%; /* 부모 높이에 맞춤 */
 }
 
 /* 버튼 스타일 */
@@ -110,7 +114,7 @@ nav {
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* 버튼 내부에서만 애니메이션이 보이도록 설정 */
 }
 
 .animated-button .span-mother {
