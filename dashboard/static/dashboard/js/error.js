@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
             labels: [],
             datasets: [
                 {
-                    label: 'Prediction Error',
+                    label: 'Error (Real Price - Predicted Price)',
                     data: [],
                     borderColor: '#f03738',
                     borderWidth: 2,

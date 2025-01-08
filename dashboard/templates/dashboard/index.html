@@ -39,7 +39,7 @@
                             <input type="date" id="endDate" class="date-input">
                         </div>
                         <canvas id="bitcoinChart"></canvas>
-                        <p class="forecast-message">{{ forecast_message|default:"금일 비트코인 예측 가격이 업데이트 되지 않았습니다." }}</p>
+                        <p class="forecast-message">{{ forecast_message }}</p>
                     {% else %}
                         <h2>비트코인 가격 예측 그래프</h2>
                         <div class="filter-container">
