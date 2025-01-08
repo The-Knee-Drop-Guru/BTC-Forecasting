@@ -43,7 +43,7 @@ def dashboard(request):
             forecast_message = "금일 비트코인은 전일 가격 대비 변동이 없을 것으로 예상됩니다."
     else:
         # 필요한 데이터가 없을 때 처리
-        forecast_message = "예측에 필요한 데이터를 찾을 수 없습니다."
+        forecast_message = "금일 비트코인 예측 가격이 업데이트 되지 않았습니다."
 
     # 템플릿에 데이터를 전달
     context = {
