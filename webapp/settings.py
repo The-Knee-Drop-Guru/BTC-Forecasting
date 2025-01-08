@@ -17,13 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-<<<<<<< HEAD
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / 'dashboard' / 'static',
-]
-=======
 STATIC_URL = '/static/'
 
 # 추가: STATICFILES_DIRS에 앱별 정적 파일 경로 추가
@@ -34,7 +27,6 @@ STATICFILES_DIRS = [
 LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 리다이렉트할 URL (예: 홈페이지)
 LOGIN_URL = '/login/'  # 로그인 페이지 URL
 
->>>>>>> develop
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -136,11 +128,8 @@ with open(BASE_DIR / 'secret.json') as secret_file:
 # DATABASES 설정
 DATABASES = secrets['DATABASES']
 
-<<<<<<< HEAD
-=======
 AUTH_USER_MODEL = 'dashboard.User'
 
->>>>>>> develop
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -169,12 +158,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-<<<<<<< HEAD
-USE_TZ = True
-
-=======
 USE_TZ = False
->>>>>>> develop
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -40,7 +40,7 @@ class UserProfile(models.Model):
     profile_image_url = models.TextField(verbose_name="프로필 이미지 링크", blank=True, null=True)
 
     class Meta:
-        db_table = 'user_profile_table'  # user 스키마 지정
+        db_table = 'user_profile_table'
         verbose_name = '사용자 프로필'
         verbose_name_plural = '사용자 프로필'
 
@@ -51,7 +51,7 @@ class Forecast(models.Model):
     predicted_price = models.FloatField(null=True, verbose_name="예측 가격")
 
     class Meta:
-        db_table = 'forecast_table'  # analytics 스키마 지정
+        db_table = 'forecast_table'
 
 
 class Feature(models.Model):
@@ -61,7 +61,7 @@ class Feature(models.Model):
     date_time = models.DateField(verbose_name="날짜")
 
     class Meta:
-        db_table = 'feature_table'  # analytics 스키마 지정
+        db_table = 'feature_table'
 
 
 class Sentiment(models.Model):
@@ -71,4 +71,4 @@ class Sentiment(models.Model):
     sentiment_value = models.CharField(max_length=10, choices=[('positive', 'positive'), ('negative', 'negative'), ('neutral', 'neutral')], verbose_name="감정 분석 결과")
 
     class Meta:
-        db_table = 'sentiment_table'  # analytics 스키마 지정
+        db_table = 'sentiment_table'

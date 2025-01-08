@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     {% load static %}
-<<<<<<< HEAD
-    <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js 라이브러리 -->
-    <script defer src="{% static 'dashboard/js/script.js' %}"></script>
-=======
     <link rel="stylesheet" href="{% static 'dashboard/css/index.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js 라이브러리 -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -20,7 +15,6 @@
     <script src="{% static 'dashboard/js/sentiment.js' %}"></script>
     <script src="{% static 'dashboard/js/simulation.js' %}"></script>
     <script src="{% static 'dashboard/js/blur.js' %}"></script>
->>>>>>> develop
 </head>
 <body>
     <!-- Navbar 포함 -->
@@ -31,12 +25,6 @@
     </header>
 
     <main>
-<<<<<<< HEAD
-        <section id="forecasting">
-            <h2>Bitcoin Price Forecast</h2>
-            <canvas id="bitcoinChart" width="800" height="400"></canvas> <!-- 그래프 캔버스 -->
-        </section>
-=======
         <div class="layout">
             <!-- Main Content -->
             <div class="container">
@@ -77,7 +65,6 @@
                     <canvas id="newsChart"></canvas>
                     <p id="date">기준: {{ date }}</p>
                 </section>
->>>>>>> develop
 
                 <!-- 최신 동향 - Reddit Sentiment -->
                 <section id="redditSentiment" class="reddit-sentiment">

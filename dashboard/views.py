@@ -1,14 +1,9 @@
-<<<<<<< HEAD
-from django.shortcuts import render
-from django.http import JsonResponse
-=======
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Count
->>>>>>> develop
 from .models import Forecast, Feature, User, UserProfile, Sentiment
 from .forms import SignUpForm
 from rest_framework.response import Response
@@ -28,16 +23,6 @@ def forecast(request):
 
 # 대시보드 화면을 위한 뷰
 def dashboard(request):
-<<<<<<< HEAD
-    
-    # 피처 중요도 가져오기
-    features = Feature.objects.all()
-    
-    # 감정 분석 데이터 가져오기
-    sentiments = Sentiment.objects.all()
-    
-=======
->>>>>>> develop
     # 사용자 정보 가져오기
     users = User.objects.all()
     # 사용자 프로필 이미지 URL 가져오기
@@ -71,10 +56,6 @@ def dashboard(request):
 
     # 템플릿에 데이터를 전달
     context = {
-<<<<<<< HEAD
-        'features': features,
-=======
->>>>>>> develop
         'users': users,
         'user_profiles': user_profiles,
         'date': datetime.now().strftime('%Y-%m-%d'),  # 현재 날짜 추가

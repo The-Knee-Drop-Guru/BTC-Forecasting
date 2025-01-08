@@ -7,9 +7,6 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('', views.dashboard, name='index'),
-<<<<<<< HEAD
-    path('forecast/', views.forecast, name='forecast'),
-=======
     path('login/', auth_views.LoginView.as_view(
         template_name='dashboard/login.html',
         authentication_form=CustomLoginForm
@@ -21,5 +18,4 @@ urlpatterns = [
     path('api/error-data/', views.error_data_api, name='error_data_api'), # 비트코인 에러 데이터
     path('api/feature-importance/', views.feature_importance_api, name='feature_importance_api'),  # 피처 중요도 데이터
     path('api/sentiment/<str:class_id>/', views.sentiment_data_api, name='sentiment_data_api'),  # 감정 분석 데이터
->>>>>>> develop
 ]
