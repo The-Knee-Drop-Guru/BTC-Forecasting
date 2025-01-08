@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/navbar.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <!-- 왼쪽 메뉴 -->
+        <div class="navbar-left">
+            <div class="navbar-logo">
+                <a href="{% url 'dashboard:index' %}"><span style="color: #DAA520;">₿</span> TheKneeDropGuru</a>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="{% url 'dashboard:index' %}">대시보드</a></li>
+                <li><a href="{% url 'dashboard:simulation' %}">모의트레이딩</a></li>
+            </ul>
+        </div>
+        
+        <!-- 오른쪽 메뉴 -->
+        <div class="navbar-right">
+            <ul class="navbar-menu">
+                {% if user.is_authenticated %}
+                    <li>
+                        <span class="navbar-welcome">어서오세요! {{ user.last_name }}{{ user.first_name }}님</span>
+                    </li>
+                    <li>
+                        <form method="post" action="{% url 'dashboard:logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="animated-button">
+                                <span class="span-mother">
+                                    <span>L</span>
+                                    <span>o</span>
+                                    <span>g</span>
+                                    <span>o</span>
+                                    <span>u</span>
+                                    <span>t</span>
+                                </span>
+                                <span class="span-mother2">
+                                    <span>L</span>
+                                    <span>o</span>
+                                    <span>g</span>
+                                    <span>o</span>
+                                    <span>u</span>
+                                    <span>t</span>
+                                </span>
+                            </button>
+                        </form>
+                    </li>                    
+                {% else %}
+                    <li>
+                        <a href="{% url 'dashboard:login' %}">
+                            <button class="animated-button">
+                                <span class="span-mother">
+                                    <span>L</span>
+                                    <span>o</span>
+                                    <span>g</span>
+                                    <span>i</span>
+                                    <span>n</span>
+                                </span>
+                                <span class="span-mother2">
+                                    <span>L</span>
+                                    <span>o</span>
+                                    <span>g</span>
+                                    <span>i</span>
+                                    <span>n</span>
+                                </span>
+                            </button>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'dashboard:signup' %}">
+                            <button class="animated-button">
+                                <span class="span-mother">
+                                    <span>S</span>
+                                    <span>i</span>
+                                    <span>g</span>
+                                    <span>n</span>
+                                    <span>U</span>
+                                    <span>p</span>
+                                </span>
+                                <span class="span-mother2">
+                                    <span>S</span>
+                                    <span>i</span>
+                                    <span>g</span>
+                                    <span>n</span>
+                                    <span>U</span>
+                                    <span>p</span>
+                                </span>
+                            </button>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>

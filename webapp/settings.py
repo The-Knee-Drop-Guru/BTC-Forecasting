@@ -17,11 +17,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
+<<<<<<< HEAD
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'dashboard' / 'static',
 ]
+=======
+STATIC_URL = '/static/'
+
+# 추가: STATICFILES_DIRS에 앱별 정적 파일 경로 추가
+STATICFILES_DIRS = [
+    BASE_DIR / 'dashboard' / 'static',
+]
+
+LOGOUT_REDIRECT_URL = '/'  # 로그아웃 후 리다이렉트할 URL (예: 홈페이지)
+LOGIN_URL = '/login/'  # 로그인 페이지 URL
+
+>>>>>>> develop
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -45,7 +58,30 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dashboard',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # Google 소셜 로그인을 위한 프로바이더
+    'rest_framework',
 ]
+
+# 구글 소셜 로그인을 위한 세팅
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+SOCIALACCOUNT_QUERY_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,6 +91,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'webapp.urls'
@@ -62,7 +99,7 @@ ROOT_URLCONF = 'webapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # templates 디렉토리 경로
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,6 +136,11 @@ with open(BASE_DIR / 'secret.json') as secret_file:
 # DATABASES 설정
 DATABASES = secrets['DATABASES']
 
+<<<<<<< HEAD
+=======
+AUTH_USER_MODEL = 'dashboard.User'
+
+>>>>>>> develop
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -127,8 +169,12 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
+<<<<<<< HEAD
 USE_TZ = True
 
+=======
+USE_TZ = False
+>>>>>>> develop
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

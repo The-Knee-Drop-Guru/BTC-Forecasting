@@ -5,27 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     {% load static %}
+<<<<<<< HEAD
     <link rel="stylesheet" href="{% static 'dashboard/css/style.css' %}">
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js 라이브러리 -->
     <script defer src="{% static 'dashboard/js/script.js' %}"></script>
+=======
+    <link rel="stylesheet" href="{% static 'dashboard/css/index.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="{% static 'dashboard/js/forecasting.js' %}"></script>
+    <script src="{% static 'dashboard/js/error.js' %}"></script>
+    <script src="{% static 'dashboard/js/feature.js' %}"></script>
+    <script src="{% static 'dashboard/js/sentiment.js' %}"></script>
+    <script src="{% static 'dashboard/js/simulation.js' %}"></script>
+    <script src="{% static 'dashboard/js/blur.js' %}"></script>
+>>>>>>> develop
 </head>
 <body>
+    <!-- Navbar 포함 -->
+    {% include 'navbar.html' %}
+    
     <header>
-        <h1>Dashboard</h1>
+        <h1>BTC Forecast Dashboard</h1>
     </header>
 
     <main>
+<<<<<<< HEAD
         <section id="forecasting">
             <h2>Bitcoin Price Forecast</h2>
             <canvas id="bitcoinChart" width="800" height="400"></canvas> <!-- 그래프 캔버스 -->
         </section>
+=======
+        <div class="layout">
+            <!-- Main Content -->
+            <div class="container">
+                <!-- 코인 가격 예측, 전망 파트 -->
+                <section id="forecasting" class="price-forecast">
+                    {% if user.is_authenticated %}
+                        <h2>비트코인 가격 예측 그래프</h2>
+                        <div class="filter-container">
+                            <label for="startDate" class="filter-label">시작일</label>
+                            <input type="date" id="startDate" class="date-input">
+                            <label for="endDate" class="filter-label">종료일</label>
+                            <input type="date" id="endDate" class="date-input">
+                        </div>
+                        <canvas id="bitcoinChart"></canvas>
+                        <p class="forecast-message">{{ forecast_message }}</p>
+                    {% else %}
+                        <h2>비트코인 가격 예측 그래프</h2>
+                        <div class="filter-container">
+                            <label for="startDate" class="filter-label">시작일</label>
+                            <input type="date" id="startDate" class="date-input" disabled>
+                            <label for="endDate" class="filter-label">종료일</label>
+                            <input type="date" id="endDate" class="date-input" disabled>
+                        </div>
+                        <div class="blur-container">
+                            <div class="blur-content">
+                                <canvas id="bitcoinChart"></canvas>
+                            </div>
+                            <div class="blur-overlay">
+                                <p>로그인 후 이용 가능합니다.</p>
+                            </div>
+                        </div>                        
+                    {% endif %}
+                </section>                              
 
-        <section id="sentiment">
+                <!-- 최신 동향 - 뉴스 Sentiment -->
+                <section id="newsSentiment" class="news-sentiment">
+                    <h2>뉴스 최신 동향</h2>
+                    <canvas id="newsChart"></canvas>
+                    <p id="date">기준: {{ date }}</p>
+                </section>
+>>>>>>> develop
 
-        </section>
+                <!-- 최신 동향 - Reddit Sentiment -->
+                <section id="redditSentiment" class="reddit-sentiment">
+                    <h2>커뮤니티 최신 동향</h2>
+                    <canvas id="redditChart"></canvas>
+                    <p id="date">기준: {{ date }}</p>
+                </section>
+            </div>
+
+            <!-- Right Aside -->
+            <aside class="right-aside">
+                <!-- 에러 그래프 -->
+                <section id="error" class="box error">
+                    {% if user.is_authenticated %}
+                        <h2>에러 그래프</h2>
+                        <canvas id="errorChart"></canvas>
+                    {% else %}
+                        <h2>에러 그래프</h2>
+                        <div class="blur-container">
+                            <div class="blur-content">
+                                <canvas id="errorChart"></canvas>
+                            </div>
+                            <div class="blur-overlay">
+                                <p>로그인 후 이용 가능합니다.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </section>
+
+                <!-- 모델 피처 중요도 순위 -->
+                <section id="feature" class="box feature">
+                    {% if user.is_authenticated %}
+                        <h2>모델 피처 중요도</h2>
+                        <ul id="featureRanking"></ul>
+                    {% else %}
+                        <h2>모델 피처 중요도</h2>
+                        <div class="blur-container">
+                            <div class="blur-content">
+                                <ul id="featureRanking"></ul>
+                            </div>
+                            <div class="blur-overlay">
+                                <p>로그인 후 이용 가능합니다.</p>
+                            </div>
+                        </div>                        
+                    {% endif %}
+                </section>              
+            </aside>
+        </div>
+        <footer>
+            <p>&copy; 2025 The Knee Drop the Guru.</p>
+        </footer>
     </main>
-    <footer>
-        <p>&copy; 2025 Dashboard Inc. All rights reserved.</p>
-    </footer>
 </body>
 </html>
