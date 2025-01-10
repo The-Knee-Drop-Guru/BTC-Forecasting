@@ -97,8 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 비트코인 예측 데이터를 가져와 차트 업데이트
     function fetchBitcoinForecast(startDate, endDate) {
-        if (!startDate || !endDate) return; // 시작 또는 종료 날짜가 없으면 중단
-
         fetch(`/api/btc-forecasting/?start_date=${startDate}&end_date=${endDate}`)
             .then(response => response.json())
             .then(data => {
@@ -109,22 +107,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     return price || null; // 결측값(null) 유지
                 });
                 bitcoinChart.update(); // 차트 업데이트
+
+                // 기본 시작/종료 날짜가 제공되면 입력 필드 초기화
+                if (data.default_start_date && data.default_end_date) {
+                    startDateInput.value = data.default_start_date;
+                    endDateInput.value = data.default_end_date;
+                }
             })
             .catch(error => console.error('Error fetching Bitcoin forecast data:', error));
     }
 
     // 기본 날짜 범위를 설정하고 데이터 가져오기
     function initializeDefaultDateRange() {
-        const today = new Date(); // 현재 날짜
-        const endDate = today.toISOString().split('T')[0]; // 종료 날짜를 오늘로 설정
-        const startDate = new Date(today); // 시작 날짜를 (오늘 - 6일)로 설정
-        startDate.setDate(startDate.getDate() - 6);
-        const startDateFormatted = startDate.toISOString().split('T')[0]; // 시작 날짜 포맷
-
-        startDateInput.value = startDateFormatted; // 시작 날짜 입력 필드 설정
-        endDateInput.value = endDate;              // 종료 날짜 입력 필드 설정
-
-        fetchBitcoinForecast(startDateFormatted, endDate); // 기본 날짜 범위로 데이터 가져오기
+        fetchBitcoinForecast(null, null); // 기본 날짜를 백엔드에서 받아옴
     }
 
     // 시작 날짜 변경 시 차트 업데이트

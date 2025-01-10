@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     listItem.setAttribute('data-rank', index + 1); // 순위 추가
                     listItem.innerHTML = `
                         <span class="feature-name">${feature.name}</span>
-                        <span class="feature-importance">${feature.importance.toFixed(2)}</span>
+                        <span class="feature-importance">${feature.importance.toFixed(1)}%
                     `;
                     featureRanking.appendChild(listItem);
                 });

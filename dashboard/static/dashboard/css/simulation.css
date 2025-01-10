@@ -1,0 +1,232 @@
+/* 기본 폰트 및 색상 설정 */
+@font-face {
+    font-family: 'Pretendard-Bold';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Bold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pretendard-Light';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* HTML 스타일 */
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* 전체 높이를 HTML에 맞춤 */
+}
+
+body {
+    font-family: 'Pretendard-Light', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f8;
+    color: #333;
+    line-height: 1.6;
+}
+/* 전체 컨테이너 스타일 */
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    height: calc(100vh - 60px); /* 전체 화면 높이에서 헤더 제외 */
+    overflow-y: auto; /* 전체 컨테이너 스크롤 가능 */
+    overflow-x: hidden; /* 가로 스크롤 방지 */
+}
+
+/* 왼쪽 콘텐츠 스타일 */
+.left-content {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: auto; /* 내부 콘텐츠 높이에 맞춤 */
+}
+
+/* 오른쪽 콘텐츠 스타일 */
+.right-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: auto; /* 내부 콘텐츠 높이에 맞춤 */
+}
+
+/* 섹션 스타일 */
+section {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 스타일 */
+h2 {
+    font-family: 'Pretendard-Bold', Arial, sans-serif;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+/* 폼 스타일 */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+form input, form button {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+}
+
+form input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+form button {
+    background-color: royalblue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+form button:hover {
+    background-color: #024fb5;
+}
+
+/* 기본 상태 스타일 */
+#simulation-status {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Idle 상태 */
+.status-idle {
+    background-color: #e0f7fa; /* 연한 파란색 */
+    color: #007bff; /* 파란 글자색 */
+    border-left: 4px solid #007bff;
+}
+
+/* Running 상태 */
+.status-running {
+    background-color: #fff3cd; /* 연한 노란색 */
+    color: #856404; /* 어두운 노란 글자색 */
+    border-left: 4px solid #ffc107;
+}
+
+/* Completed 상태 */
+.status-completed {
+    background-color: #d4edda; /* 연한 초록색 */
+    color: #155724; /* 어두운 초록 글자색 */
+    border-left: 4px solid #28a745;
+}
+
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+/* 테이블 컨테이너 */
+.table-container {
+    max-height: 300px; /* 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    border: 1px solid #ddd; /* 테이블 외곽선 */
+}
+
+/* 테이블 스타일 */
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* 테이블 헤더 고정 */
+.table-container thead th {
+    position: sticky; /* 스크롤 시 고정 */
+    top: 0; /* 헤더의 상단 위치 */
+    background-color: #f4f4f4; /* 고정된 헤더의 배경색 */
+    z-index: 1; /* 헤더가 다른 요소 위에 표시되도록 설정 */
+}
+
+/* 셀 스타일 */
+.table-container th, .table-container td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.table-container th {
+    font-weight: bold;
+}
+
+.table-container tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+
+/* 스크롤바 스타일 */
+.container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border-radius: 4px;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
+.container::-webkit-scrollbar-track {
+    background-color: #f4f4f4;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left-content, .right-content {
+        flex: none;
+        width: 100%;
+    }
+}
+

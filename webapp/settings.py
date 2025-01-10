@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'dashboard',
     'allauth',
     'allauth.account',
@@ -74,6 +75,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 
+AUTH_USER_MODEL = 'dashboard.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -148,6 +150,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# 세션 엔진 설정 (데이터베이스 기반 세션 사용)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# 세션 쿠키 설정
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_SECURE = False  # HTTPS가 아닌 경우 False
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 86400  # 1일 (초 단위)
+
+# 세션 유지 설정
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 브라우저 닫히면 세션 만료
+SESSION_SAVE_EVERY_REQUEST = True  # 모든 요청마다 세션 저장
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

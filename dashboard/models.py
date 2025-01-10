@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from decimal import Decimal
 
 # User Manager
 class UserManager(BaseUserManager):
@@ -72,3 +73,46 @@ class Sentiment(models.Model):
 
     class Meta:
         db_table = 'sentiment_table'
+
+
+# 사용자의 거래 내역
+class TransactionLog(models.Model):
+    TRANSACTION_TYPES = [
+        ('BUY', 'Buy'),
+        ('SELL', 'Sell'),
+        ('HOLD', 'Hold'),  # HOLD 추가
+    ]
+    user = models.ForeignKey('User', on_delete=models.CASCADE, db_column='user_id', related_name='transaction_logs', verbose_name='사용자')
+    timestamp = models.DateTimeField(verbose_name="거래 시간")
+    transaction_type = models.CharField(max_length=4, choices=TRANSACTION_TYPES, verbose_name="거래 유형")
+    quantity = models.DecimalField(max_digits=20, decimal_places=8, verbose_name="거래 수량")
+    price = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="거래 가격")
+    amount = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="거래 금액")
+    fee = models.DecimalField(max_digits=20, decimal_places=2, default=Decimal("0.00"), verbose_name="거래 수수료")
+    balance = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="잔고")
+    asset = models.DecimalField(max_digits=20, decimal_places=8, verbose_name="보유 자산")
+
+    class Meta:
+        db_table = 'transaction_log_table'
+        verbose_name = '거래 기록'
+        verbose_name_plural = '거래 기록'
+
+
+
+# 사용자의 일일 최종 거래 내역
+class SummaryReport(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, db_column='user_id', related_name='summary_reports', verbose_name='사용자')
+    date = models.DateField(verbose_name="보고 날짜")
+    total_asset_value = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="최종 자산 가치")
+    initial_balance = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="최초 자본")
+    total_return = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="총 수익률")
+    total_trades = models.IntegerField(verbose_name="총 거래 횟수")
+    max_loss = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="최대 손실 금액")
+    max_profit = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="최대 이익 금액")
+    take_profit_count = models.IntegerField(verbose_name="익절 횟수")
+    stop_loss_count = models.IntegerField(verbose_name="손절 횟수")
+
+    class Meta:
+        db_table = 'summary_report_table'
+        verbose_name = '요약 보고서'
+        verbose_name_plural = '요약 보고서'

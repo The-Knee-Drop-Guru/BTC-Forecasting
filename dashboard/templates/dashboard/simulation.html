@@ -1,15 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Simulation</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'dashboard/css/index.css' %}">
-    </head>
-    <body>
-        <!-- Navbar 포함 -->
-        {% include 'navbar.html' %}
-        <p class="forecast-text">오늘 비트코인의 전망은 긍정적입니다.</p>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation</title>
+    {% load static %}
+    {% load humanize %}
+    <link rel="stylesheet" href="{% static 'dashboard/css/simulation.css' %}">
+    <script src="{% static 'dashboard/js/simulation.js' %}" defer></script>
+</head>
+<body>
+    <!-- Navbar 포함 -->
+    {% include 'navbar.html' %}
+
+    <!-- 전체 레이아웃 -->
+    <div class="container">
+        <!-- 왼쪽 콘텐츠 -->
+        <div class="left-content">
+            <!-- 거래 내역 -->
+            <section>
+                <h2>거래 내역</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>시간</th>
+                                <th>거래 유형</th>
+                                <th>수량</th>
+                                <th>가격</th>
+                                <th>금액</th>
+                                <th>수수료</th>
+                                <th>잔고</th>
+                                <th>코인 보유량</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-logs" data-url="{% url 'dashboard:get_transaction_logs' %}">
+                            {% for log in logs|slice:":60" %}
+                            <tr>
+                                <td>{{ log.timestamp }}</td>
+                                <td>{{ log.get_transaction_type_display }}</td>
+                                <td>{{ log.quantity }}</td>
+                                <td>{{ log.price }}</td>
+                                <td>{{ log.amount }}</td>
+                                <td>{{ log.fee }}</td>
+                                <td>{{ log.balance }}</td>
+                                <td>{{ log.asset }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8">거래 내역이 없습니다.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>                   
+
+            <!-- 일일 요약 -->
+            <section>
+                <h2>일일 요약</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>값</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>최종 잔고</td>
+                            <td>
+                                {% if result and result.final_balance is not None %}
+                                    $ {{ result.final_balance|floatformat:2|intcomma }}
+                                {% else %}
+                                    거래 내역이 없습니다.
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>총 자산 가치</td>
+                            <td>
+                                {% if result and result.total_asset_value %}
+                                    $ {{ result.total_asset_value|floatformat:2|intcomma }}
+                                {% else %}
+                                    거래 내역이 없습니다.
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>최종 보유 코인</td>
+                                <td>
+                                    {% if result and result.final_assets is not None %}
+                                        ₿ {{ result.final_assets|floatformat:2 }}
+                                    {% else %}
+                                        거래 내역이 없습니다.
+                                    {% endif %}
+                                </td>
+                        </tr>
+                        <tr>
+                            <td>총 거래 횟수</td>
+                            <td>
+                                {% if result and result.total_trades %}
+                                    {{ result.total_trades }} 번
+                                {% else %}
+                                    거래 내역이 없습니다.
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>총 수익률</td>
+                            <td>
+                                {% if result and result.total_return is not None %}
+                                    {{ result.total_return|floatformat:2 }} %
+                                {% else %}
+                                    거래 내역이 없습니다.
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- 오른쪽 콘텐츠 -->
+        <aside class="right-content">
+            <!-- 시뮬레이션 설정 -->
+            <section>
+                <h2>시뮬레이션 설정</h2>
+                <form id="simulation-form" method="post" data-url="{% url 'dashboard:set_user_trading_settings' %}">
+                    {% csrf_token %}
+                    <label for="initial_balance">초기 자본금 ($)</label>
+                    <input type="number" id="initial_balance" name="initial_balance" step="1" required>
+                
+                    <label for="max_loss">손절 비율 (예 0.05 = 5%) / 최소 0.01 ~ 최대 0.99</label>
+                    <input type="number" id="max_loss" name="max_loss" step="0.01" min="0.01" max="1.00" value="0.01" required>
+
+                    <label for="take_profit">익절 비율 (예 0.1 = 10%) / 최소 0.01 ~ 최대 0.99</label>
+                    <input type="number" id="take_profit" name="take_profit" step="0.01" min="0.01" max="1.00" value="0.01" required>
+
+                    <button type="submit">설정 저장</button>
+                </form>
+                <p id="simulation-status" class="status-idle" data-url="{% url 'dashboard:check_simulation_status' %}">
+                    시뮬레이션 상태: 대기 중
+                </p>
+            </section>
+
+            <!-- 현재 상태 -->
+            <section>
+                <h2>현재 상태</h2>
+                {% if error %}
+                    <p>{{ error }}</p>
+                {% else %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>항목</th>
+                                <th>값</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>잔고</td>
+                                <td id="current-balance">$ {{ current_balance|floatformat:2|intcomma }}</td>
+                            </tr>
+                            <tr>
+                                <td>보유 코인</td>
+                                <td id="current-asset">₿ {{ current_asset }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endif %}
+            </section>                       
+        </aside>
+    </div>
+</body>
 </html>
